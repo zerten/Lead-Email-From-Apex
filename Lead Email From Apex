@@ -1,0 +1,92 @@
+Lead Email From Apex
+REQUIREMENT
+Clarusway wants to send an email to their Leads when Lead Status become “Working -
+Contacted”. Could you meet this issue using Apex?
+
+trigger LeadWelcoming on Lead (Before Update) {
+    list<Messaging.Email> emails = new list<Messaging.Email>();
+    for(Lead led : Trigger.new){
+		if(led.Email !=null && led.Status == 'Working - Contacted'&& led.FirstName !=null && led.LastName !=null){
+			Messaging.SingleEmailMessage msg=new Messaging.SingleEmailMessage();
+			String mail = UserInfo.getUserEmail();
+			List<String> options = new List<String>{mail,led.Email};
+			msg.setToAddresses(options);
+			msg.setPlainTextBody('Hi '+ led.FirstName + '\n\nWe will contact with you as soon as possible \n\n Kind Regards \n\n Signature');
+			msg.setSubject('Welcome');
+			emails.add(msg);
+		}
+	}
+    Messaging.sendEmail(emails);
+}
+
+
+YADA
+
+trigger LeadTrigger on Lead (before insert, before update) {
+    
+    List<Messaging.Email> emails = new List<Messaging.Email>();
+    for(Lead led:Trigger.new){
+        if(led.Email != null && led.Status == 'Working - Contacted' && 
+           led.FirstName != null && led.LastName != null){
+            
+          	Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();
+          	String mail = UserInfo.getUserEmail();
+            
+            List<String> options = new List<String>{mail, led.Email};
+                
+            msg.setToAddresses(options);
+            msg.setPlainTextBody('Hi ' + led.FirstName + ' We will contact to you asap');
+            msg.setSubject('Welcome');
+            
+            emails.add(msg);
+            //Messaging.Email[] emails = new Messaging.Email[]{msg};
+                      
+        }
+    }
+    Messaging.sendEmail(emails); 
+}
+
+
+YADA
+
+trigger LeadWelcoming on Lead (before update) {
+   Messaging.SingleEmailMessage msg = new Messaging.SingleEmailMessage();   //single email variable olusturuyoruz. msg variable adi
+   Messaging.Email [] emails = new Messaging.Email []{msg};     //burdaki msg, singlemail aslinda. email listesi haline getirebiliriz, mail listesi bu. Liste email variable bu. icine msg i koydum
+            
+    for(Lead led : Trigger.new){    //Triggerda yeni isleme girecek yeni lead objemizi for loopa sokuyoruz. variable name burda ;led, trigger new loopa girecek
+        
+        if(led.Email != null && led.Status == 'Working - Contacted' && led.FirstName !=null && led.LastName !=null){
+        
+        String mail = UserInfo.getUserEmail();  //string variable olusturma 'mail' adinda. userin emailini buraya attik
+            List<String> options = new List<String>{mail,led.Email};  //liste variable olusturup icine hem triggerdan gelen lead hemde userin mailini koyma     
+            msg.setToAddresses(options);  //optionlarin mail gondermesi icin msg adinda mail variable vardi ya, mail gidecek adresleri seciyoruz, hangi adreslere liste cinde tanimlananlara 
+            msg.setPlainTextBody('Hi '+ led.FirstName + ' We will contact with you as soon as possible');  
+            msg.setSubject('Welcome');
+                      
+                }
+    }
+    Messaging.sendEmail(emails); email variable i kullaniyoruz
+}
+
+
+YADA;
+
+trigger LeadWelcoming on Lead (Before Update) {
+for(Lead led : Trigger.new){
+if(led.Email !=null && led.Status == 'Working - Contacted'
+&& led.FirstName !=null && led.LastName !=null){
+Messaging.SingleEmailMessage msg=new Messaging.SingleEmailMessage();
+String mail = UserInfo.getUserEmail();
+List<String> options = new List<String>{mail,led.Email};
+msg.setToAddresses(options);
+msg.setPlainTextBody('Hi '+ led.FirstName + ' We will contact
+with you as soon as possible');
+msg.setSubject('Welcome');
+Messaging.Email [] emails = new Messaging.Email []{msg};
+Messaging.sendEmail(emails);
+}
+}
+}
+
+
+
